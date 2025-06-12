@@ -4,11 +4,400 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Dashboard de Productos - Grupo Felmel</title>
-        <link rel="stylesheet" href="styles.css" />
-        <link
-            rel="icon"
-            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>"
-        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --primary-dark: #0d1117;
+                --secondary-dark: #161b22;
+                --tertiary-dark: #21262d;
+                --primary-blue: #001a23;
+                --accent-blue: #002a36;
+                --light-blue: #003845;
+                --text-primary: #f0f6fc;
+                --text-secondary: #8b949e;
+                --text-muted: #6e7681;
+                --border-color: #30363d;
+                --hover-bg: #262c36;
+                --success: #238636;
+                --success-bright: #2ea043;
+                --warning: #d29922;
+                --warning-bright: #f2cc60;
+                --error: #da3633;
+                --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+                --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.6);
+                --glass-bg: rgba(33, 38, 45, 0.8);
+                --glass-border: rgba(240, 246, 252, 0.1);
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(
+                    135deg,
+                    var(--primary-dark) 0%,
+                    var(--secondary-dark) 50%,
+                    var(--tertiary-dark) 100%
+                );
+                color: var(--text-primary);
+                line-height: 1.6;
+                min-height: 100vh;
+            }
+
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .header {
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                padding: 30px;
+                margin-bottom: 30px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .header::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(
+                    90deg,
+                    var(--primary-blue),
+                    var(--accent-blue),
+                    var(--light-blue)
+                );
+            }
+
+            .header h1 {
+                color: var(--text-primary);
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 10px;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            .header p {
+                color: var(--text-secondary);
+                font-size: 1.1rem;
+            }
+
+            .controls {
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                padding: 25px;
+                margin-bottom: 30px;
+            }
+
+            .controls-row {
+                display: flex;
+                gap: 20px;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                background: linear-gradient(
+                    135deg,
+                    var(--primary-blue) 0%,
+                    var(--accent-blue) 100%
+                );
+                color: var(--text-primary);
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 2px 8px rgba(0, 26, 35, 0.4);
+            }
+
+            .btn:hover {
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-blue) 0%,
+                    var(--light-blue) 100%
+                );
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 26, 35, 0.6);
+            }
+
+            .btn:disabled {
+                background: var(--text-muted);
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            .btn-success {
+                background: linear-gradient(
+                    135deg,
+                    var(--success) 0%,
+                    var(--success-bright) 100%
+                );
+                box-shadow: 0 2px 8px rgba(35, 134, 54, 0.3);
+            }
+
+            .btn-success:hover {
+                background: linear-gradient(
+                    135deg,
+                    var(--success-bright) 0%,
+                    #2ea043 100%
+                );
+            }
+
+            .filters {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .filter-group label {
+                font-weight: 600;
+                margin-bottom: 5px;
+                color: var(--text-primary);
+            }
+
+            .filter-group input,
+            .filter-group select {
+                padding: 10px 12px;
+                border: 2px solid var(--border-color);
+                border-radius: 6px;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                background: var(--tertiary-dark);
+                color: var(--text-primary);
+            }
+
+            .filter-group input:focus,
+            .filter-group select:focus {
+                outline: none;
+                border-color: var(--accent-blue);
+                box-shadow: 0 0 0 3px rgba(0, 42, 54, 0.2);
+            }
+
+            .filter-group input::placeholder {
+                color: var(--text-muted);
+            }
+
+            .loading {
+                display: none;
+                text-align: center;
+                padding: 40px;
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                margin-bottom: 30px;
+            }
+
+            .loading.active {
+                display: block;
+            }
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid var(--border-color);
+                border-top: 4px solid var(--accent-blue);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .table-container {
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                box-shadow: var(--shadow);
+                overflow: hidden;
+                margin-bottom: 30px;
+            }
+
+            .table-header {
+                padding: 20px 25px;
+                border-bottom: 2px solid var(--border-color);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 15px;
+                background: var(--secondary-dark);
+            }
+
+            .table-title {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+
+            .table-stats {
+                color: var(--text-secondary);
+                font-size: 1rem;
+                background: var(--tertiary-dark);
+                padding: 8px 16px;
+                border-radius: 20px;
+                border: 1px solid var(--border-color);
+            }
+
+            .table-wrapper {
+                overflow-x: auto;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.9rem;
+            }
+
+            th {
+                background: var(--secondary-dark);
+                padding: 15px 12px;
+                text-align: left;
+                font-weight: 700;
+                color: var(--text-primary);
+                border-bottom: 2px solid var(--border-color);
+                white-space: nowrap;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            th:hover {
+                background: var(--hover-bg);
+                color: var(--light-blue);
+            }
+
+            td {
+                padding: 15px 12px;
+                border-bottom: 1px solid var(--border-color);
+                vertical-align: top;
+                color: var(--text-primary);
+            }
+
+            tbody tr {
+                transition: background-color 0.3s ease;
+            }
+
+            tbody tr:hover {
+                background: var(--hover-bg);
+            }
+
+            .price {
+                font-weight: 600;
+                color: var(--success-bright);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+
+            .price-discount {
+                font-weight: 600;
+                color: var(--warning-bright);
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+
+            .date {
+                color: var(--text-secondary);
+                font-size: 0.85rem;
+            }
+
+            .no-data {
+                text-align: center;
+                padding: 60px 20px;
+                color: var(--text-secondary);
+                font-size: 1.1rem;
+            }
+
+            .error {
+                background: rgba(218, 54, 51, 0.2);
+                color: #ff7b7b;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 20px 0;
+                border: 1px solid rgba(218, 54, 51, 0.3);
+                backdrop-filter: blur(10px);
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 15px;
+                }
+
+                .header h1 {
+                    font-size: 2rem;
+                }
+
+                .controls-row {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .btn {
+                    justify-content: center;
+                }
+
+                .filters {
+                    grid-template-columns: 1fr;
+                }
+
+                .table-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                table {
+                    font-size: 0.8rem;
+                }
+
+                th,
+                td {
+                    padding: 10px 8px;
+                }
+            }
+
+            .rocket-icon {
+                display: inline-block;
+                margin-right: 10px;
+                font-size: 1.2em;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -27,27 +416,6 @@
                     <button id="exportarBtn" class="btn btn-success" disabled>
                         📥 Exportar a CSV
                     </button>
-                    <button
-                        id="cargarMasBtn"
-                        class="btn btn-secondary"
-                        style="display: none"
-                    >
-                        ⬇️ Cargar Más Productos
-                    </button>
-                </div>
-
-                <div class="controls-info">
-                    <div class="pagination-info">
-                        <span id="paginationInfo"
-                            >Carga rápida: primeros 100 productos</span
-                        >
-                    </div>
-                    <div class="speed-controls">
-                        <label>
-                            <input type="checkbox" id="cargaRapida" checked />
-                            Carga rápida (100 productos)
-                        </label>
-                    </div>
                 </div>
 
                 <div class="filters">
@@ -96,10 +464,7 @@
 
             <div id="loading" class="loading">
                 <div class="spinner"></div>
-                <p id="loadingText">Consultando productos...</p>
-                <div class="progress-info">
-                    <span id="progressText">Iniciando...</span>
-                </div>
+                <p>Consultando productos...</p>
             </div>
 
             <div id="error" class="error" style="display: none"></div>
@@ -140,11 +505,530 @@
             </div>
         </div>
 
-        <script src="config.js"></script>
-        <script src="api.js"></script>
-        <script src="filters.js"></script>
-        <script src="table.js"></script>
-        <script src="export.js"></script>
-        <script src="app.js"></script>
+        <script>
+            // Variables globales
+            let productos = [];
+            let productosFiltrados = [];
+            let sortDirection = {};
+
+            // Credenciales de la API
+            const API_CONFIG = {
+                url: "https://orocolombia.co/wp-json/wc/v3/products",
+                consumer_key: "ck_865f2431376662f2bff8e2fdca6a933869805784",
+                consumer_secret: "cs_b4d4ae6ce65cfa4300464afa935cc708398b90b4",
+            };
+
+            // Elementos del DOM
+            const consultarBtn = document.getElementById("consultarBtn");
+            const exportarBtn = document.getElementById("exportarBtn");
+            const loading = document.getElementById("loading");
+            const error = document.getElementById("error");
+            const tableContainer = document.getElementById("tableContainer");
+            const tableStats = document.getElementById("tableStats");
+            const productTableBody =
+                document.getElementById("productTableBody");
+
+            // Filtros
+            const filterSku = document.getElementById("filterSku");
+            const filterNombre = document.getElementById("filterNombre");
+            const filterCategoria = document.getElementById("filterCategoria");
+            const filterMaterial = document.getElementById("filterMaterial");
+            const filterPrecio = document.getElementById("filterPrecio");
+
+            // Event listeners
+            consultarBtn.addEventListener("click", consultarProductos);
+            exportarBtn.addEventListener("click", exportarCSV);
+
+            // Event listeners para filtros
+            filterSku.addEventListener("input", aplicarFiltros);
+            filterNombre.addEventListener("input", aplicarFiltros);
+            filterCategoria.addEventListener("change", aplicarFiltros);
+            filterMaterial.addEventListener("input", aplicarFiltros);
+            filterPrecio.addEventListener("input", aplicarFiltros);
+
+            // Función para consultar productos - EXACTAMENTE COMO TU CÓDIGO ORIGINAL + PAGINACIÓN
+            async function consultarProductos() {
+                try {
+                    mostrarLoading(true);
+                    ocultarError();
+
+                    // Consultar todos los productos con paginación usando TU método exacto
+                    let allProducts = [];
+                    let page = 1;
+                    let hasMore = true;
+
+                    while (hasMore) {
+                        console.log(`Consultando página ${page}...`);
+
+                        const pageProducts = await consultarConXHR(page);
+
+                        if (pageProducts && pageProducts.length > 0) {
+                            allProducts = allProducts.concat(pageProducts);
+                            console.log(
+                                `Página ${page}: ${pageProducts.length} productos. Total: ${allProducts.length}`
+                            );
+                            page++;
+
+                            // Si obtuvimos menos de 100, ya no hay más páginas
+                            if (pageProducts.length < 100) {
+                                hasMore = false;
+                            }
+                        } else {
+                            hasMore = false;
+                        }
+                    }
+
+                    if (allProducts && allProducts.length > 0) {
+                        console.log(
+                            "¡ÉXITO! Total productos obtenidos:",
+                            allProducts.length
+                        );
+
+                        productos = procesarProductos(allProducts);
+                        productosFiltrados = [...productos];
+
+                        actualizarCategorias();
+                        mostrarTabla();
+                        exportarBtn.disabled = false;
+                        ocultarError();
+                    } else {
+                        throw new Error(
+                            "No se pudieron obtener productos de la API"
+                        );
+                    }
+                } catch (err) {
+                    console.error("Error completo:", err);
+                    mostrarError(`Error: ${err.message}`);
+                } finally {
+                    mostrarLoading(false);
+                }
+            }
+
+            // EXACTAMENTE tu método XMLHttpRequest original, solo agregando parámetro de página
+            function consultarConXHR(page = 1) {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    const url = `/proxy.php?page=${page}`;
+                    console.log("Intentando con XMLHttpRequest...");
+                    console.log("URL:", url);
+
+                    xhr.open("GET", url, true);
+                    xhr.setRequestHeader("Accept", "application/json");
+                    xhr.setRequestHeader("Content-Type", "application/json");
+
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            console.log("XHR Status:", xhr.status);
+                            console.log(
+                                "XHR Response Headers:",
+                                xhr.getAllResponseHeaders()
+                            );
+
+                            if (xhr.status === 200) {
+                                try {
+                                    const data = JSON.parse(xhr.responseText);
+                                    console.log(
+                                        "XHR Success! Data length:",
+                                        data.length
+                                    );
+                                    resolve(data);
+                                } catch (parseError) {
+                                    console.log("XHR Parse error:", parseError);
+                                    reject(
+                                        new Error(
+                                            "Error al parsear respuesta JSON"
+                                        )
+                                    );
+                                }
+                            } else if (xhr.status === 0) {
+                                reject(
+                                    new Error(
+                                        "Petición bloqueada por CORS o red"
+                                    )
+                                );
+                            } else {
+                                console.log(
+                                    "XHR Error response:",
+                                    xhr.responseText
+                                );
+                                reject(
+                                    new Error(
+                                        `HTTP ${xhr.status}: ${xhr.statusText}`
+                                    )
+                                );
+                            }
+                        }
+                    };
+
+                    xhr.onerror = function () {
+                        console.log("XHR Network error");
+                        reject(new Error("Error de red o CORS"));
+                    };
+
+                    xhr.ontimeout = function () {
+                        reject(new Error("Timeout de la petición"));
+                    };
+
+                    xhr.timeout = 15000; // 15 segundos timeout
+                    xhr.send();
+                });
+            }
+
+            // EXACTAMENTE tu función procesarProductos original
+            function procesarProductos(productosAPI) {
+                console.log("Procesando", productosAPI.length, "productos...");
+
+                return productosAPI.map((producto, index) => {
+                    try {
+                        // Extraer precio con múltiples fallbacks
+                        let precio = 0;
+                        if (producto.price && producto.price !== "") {
+                            precio = parseFloat(producto.price);
+                        } else if (
+                            producto.regular_price &&
+                            producto.regular_price !== ""
+                        ) {
+                            precio = parseFloat(producto.regular_price);
+                        } else if (
+                            producto.sale_price &&
+                            producto.sale_price !== ""
+                        ) {
+                            precio = parseFloat(producto.sale_price);
+                        }
+
+                        const precioDescuento = precio * 0.65; // 35% de descuento
+
+                        // Extraer categorías
+                        let categorias = "Sin categoría";
+                        if (
+                            producto.categories &&
+                            Array.isArray(producto.categories) &&
+                            producto.categories.length > 0
+                        ) {
+                            categorias = producto.categories
+                                .map((cat) => cat.name || cat)
+                                .join(", ");
+                        }
+
+                        // Extraer material de los atributos con múltiples opciones
+                        let material = "N/A";
+                        if (
+                            producto.attributes &&
+                            Array.isArray(producto.attributes)
+                        ) {
+                            const materialAttr = producto.attributes.find(
+                                (attr) => {
+                                    const name = (
+                                        attr.name || ""
+                                    ).toLowerCase();
+                                    return (
+                                        name.includes("material") ||
+                                        name.includes("composición") ||
+                                        name.includes("metal") ||
+                                        name.includes("tipo")
+                                    );
+                                }
+                            );
+
+                            if (
+                                materialAttr &&
+                                materialAttr.options &&
+                                Array.isArray(materialAttr.options)
+                            ) {
+                                material = materialAttr.options.join(", ");
+                            }
+                        }
+
+                        // Si no hay material en atributos, buscar en descripción o tags
+                        if (material === "N/A") {
+                            const descripcion = (
+                                producto.description ||
+                                producto.short_description ||
+                                ""
+                            ).toLowerCase();
+                            if (descripcion.includes("oro")) material = "Oro";
+                            else if (descripcion.includes("plata"))
+                                material = "Plata";
+                            else if (descripcion.includes("acero"))
+                                material = "Acero Inoxidable";
+                            else if (descripcion.includes("titanio"))
+                                material = "Titanio";
+                        }
+
+                        // Extraer y formatear fecha
+                        let fecha = new Date();
+                        if (producto.date_modified) {
+                            fecha = new Date(producto.date_modified);
+                        } else if (producto.date_created) {
+                            fecha = new Date(producto.date_created);
+                        }
+
+                        return {
+                            sku: producto.sku || `PROD-${index + 1}`,
+                            nombre: producto.name || "Sin nombre",
+                            categoria: categorias,
+                            material: material,
+                            precio: precio,
+                            precioDescuento: precioDescuento,
+                            fecha: fecha,
+                            fechaTexto: formatearFecha(fecha),
+                        };
+                    } catch (error) {
+                        console.error(
+                            "Error procesando producto:",
+                            error,
+                            producto
+                        );
+                        return {
+                            sku: `ERROR-${index}`,
+                            nombre: "Error al procesar",
+                            categoria: "Error",
+                            material: "Error",
+                            precio: 0,
+                            precioDescuento: 0,
+                            fecha: new Date(),
+                            fechaTexto: "Error",
+                        };
+                    }
+                });
+            }
+
+            // Actualizar opciones de categorías
+            function actualizarCategorias() {
+                const categorias = [
+                    ...new Set(productos.map((p) => p.categoria)),
+                ].sort();
+                filterCategoria.innerHTML =
+                    '<option value="">Todas las categorías</option>';
+
+                categorias.forEach((categoria) => {
+                    if (categoria && categoria !== "Sin categoría") {
+                        const option = document.createElement("option");
+                        option.value = categoria;
+                        option.textContent = categoria;
+                        filterCategoria.appendChild(option);
+                    }
+                });
+            }
+
+            // Aplicar filtros - CORREGIDO
+            function aplicarFiltros() {
+                const filtros = {
+                    sku: filterSku.value.toLowerCase(),
+                    nombre: filterNombre.value.toLowerCase(),
+                    categoria: filterCategoria.value,
+                    material: filterMaterial.value.toLowerCase(),
+                    precio: parseFloat(filterPrecio.value) || Infinity,
+                };
+
+                productosFiltrados = productos.filter((producto) => {
+                    return (
+                        producto.sku.toLowerCase().includes(filtros.sku) &&
+                        producto.nombre
+                            .toLowerCase()
+                            .includes(filtros.nombre) &&
+                        (filtros.categoria === "" ||
+                            producto.categoria.includes(filtros.categoria)) &&
+                        producto.material
+                            .toLowerCase()
+                            .includes(filtros.material) &&
+                        producto.precio <= filtros.precio
+                    );
+                });
+
+                mostrarTabla();
+            }
+
+            // Mostrar tabla
+            function mostrarTabla() {
+                if (productosFiltrados.length === 0) {
+                    productTableBody.innerHTML =
+                        '<tr><td colspan="7" class="no-data">No se encontraron productos</td></tr>';
+                    tableStats.textContent = "0 productos";
+                } else {
+                    productTableBody.innerHTML = productosFiltrados
+                        .map(
+                            (producto) => `
+                    <tr>
+                        <td>${producto.sku}</td>
+                        <td>${producto.nombre}</td>
+                        <td>${producto.categoria}</td>
+                        <td>${producto.material}</td>
+                        <td class="price">$${producto.precio.toLocaleString(
+                            "es-ES",
+                            { minimumFractionDigits: 2 }
+                        )}</td>
+                        <td class="price-discount">$${producto.precioDescuento.toLocaleString(
+                            "es-ES",
+                            { minimumFractionDigits: 2 }
+                        )}</td>
+                        <td class="date">${producto.fechaTexto}</td>
+                    </tr>
+                `
+                        )
+                        .join("");
+
+                    tableStats.textContent = `${
+                        productosFiltrados.length
+                    } producto${productosFiltrados.length !== 1 ? "s" : ""} ${
+                        productosFiltrados.length < productos.length
+                            ? `(de ${productos.length} total)`
+                            : ""
+                    }`;
+                }
+
+                tableContainer.style.display = "block";
+            }
+
+            // Ordenar tabla
+            function sortTable(campo) {
+                const isAsc = sortDirection[campo] !== "asc";
+                sortDirection[campo] = isAsc ? "asc" : "desc";
+
+                productosFiltrados.sort((a, b) => {
+                    let valueA = a[campo];
+                    let valueB = b[campo];
+
+                    if (campo === "precio" || campo === "precioDescuento") {
+                        return isAsc ? valueA - valueB : valueB - valueA;
+                    } else if (campo === "fecha") {
+                        return isAsc ? valueA - valueB : valueB - valueA;
+                    } else {
+                        valueA = valueA.toString().toLowerCase();
+                        valueB = valueB.toString().toLowerCase();
+                        if (valueA < valueB) return isAsc ? -1 : 1;
+                        if (valueA > valueB) return isAsc ? 1 : -1;
+                        return 0;
+                    }
+                });
+
+                mostrarTabla();
+            }
+
+            // Exportar a CSV - CORREGIDO
+            function exportarCSV() {
+                if (productosFiltrados.length === 0) {
+                    alert("No hay productos para exportar");
+                    return;
+                }
+
+                try {
+                    console.log(
+                        "Iniciando exportación...",
+                        productosFiltrados.length,
+                        "productos"
+                    );
+
+                    const headers = [
+                        "SKU",
+                        "Nombre",
+                        "Categoría",
+                        "Material",
+                        "Precio",
+                        "Precio con Descuento 35%",
+                        "Última Modificación",
+                    ];
+
+                    // Crear contenido CSV
+                    const csvRows = [
+                        headers.join(","), // Headers
+                        ...productosFiltrados.map((producto) =>
+                            [
+                                `"${producto.sku || ""}"`,
+                                `"${(producto.nombre || "").replace(
+                                    /"/g,
+                                    '""'
+                                )}"`, // Escapar comillas dobles
+                                `"${(producto.categoria || "").replace(
+                                    /"/g,
+                                    '""'
+                                )}"`,
+                                `"${(producto.material || "").replace(
+                                    /"/g,
+                                    '""'
+                                )}"`,
+                                `"${(producto.precio || 0).toLocaleString(
+                                    "es-CO",
+                                    { minimumFractionDigits: 2 }
+                                )}"`,
+                                `"${(
+                                    producto.precioDescuento || 0
+                                ).toLocaleString("es-CO", {
+                                    minimumFractionDigits: 2,
+                                })}"`,
+                                `"${producto.fechaTexto || ""}"`,
+                            ].join(",")
+                        ),
+                    ];
+
+                    const csvContent = csvRows.join("\n");
+                    console.log("CSV generado, total filas:", csvRows.length);
+
+                    // Crear y descargar archivo
+                    const blob = new Blob(["\uFEFF" + csvContent], {
+                        type: "text/csv;charset=utf-8;",
+                    });
+
+                    const link = document.createElement("a");
+                    const url = URL.createObjectURL(blob);
+
+                    // Generar nombre de archivo con fecha
+                    const fecha = new Date().toISOString().split("T")[0];
+                    const filename = `productos_felmel_${fecha}.csv`;
+
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", filename);
+                    link.style.visibility = "hidden";
+
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    // Limpiar URL objeto
+                    URL.revokeObjectURL(url);
+
+                    console.log(`Archivo ${filename} exportado exitosamente`);
+
+                    // Mostrar mensaje de éxito
+                    const originalText = exportarBtn.textContent;
+                    exportarBtn.textContent = "✅ Exportado!";
+                    exportarBtn.style.background = "var(--success-bright)";
+
+                    setTimeout(() => {
+                        exportarBtn.textContent = originalText;
+                        exportarBtn.style.background = "";
+                    }, 2000);
+                } catch (error) {
+                    console.error("Error en exportación:", error);
+                    alert(`Error al exportar: ${error.message}`);
+                }
+            }
+
+            // Formatear fecha
+            function formatearFecha(fecha) {
+                return fecha.toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+            }
+
+            // Funciones auxiliares
+            function mostrarLoading(show) {
+                loading.classList.toggle("active", show);
+                consultarBtn.disabled = show;
+            }
+
+            function mostrarError(mensaje) {
+                error.textContent = mensaje;
+                error.style.display = "block";
+            }
+
+            function ocultarError() {
+                error.style.display = "none";
+            }
+        </script>
     </body>
 </html>
